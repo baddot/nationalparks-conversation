@@ -1,4 +1,4 @@
-# nationalparks-conversation
+# National Parks - Conversation
  
 The repo contains code demonstrating the Watson Conversation service
 
