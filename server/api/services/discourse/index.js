@@ -8,7 +8,7 @@ class DiscourseService {
   }) {
     return Conversation
       .message({input, context})
-      .map(handleDiscourse);
+      .flatMap(handleDiscourse);
   }
 }
 const service = new DiscourseService();
