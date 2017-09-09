@@ -27,6 +27,10 @@ export default function discourseHandler(r) {
   // OR
   // Use e.g. Chrome Dev Tools to inspect the response payload
 
+  if (r.context.system.dialog_turn_counter === 1) {
+    r.context.parks = ParksDatabase.all().map(p => p.name);
+  }
+
   // 2. STORE THE PARK NAME THAT THE USER IS CURRENTLY ASKING ABOUT
   //    Examine the entities object in the response, r
   //    If the 'NationalParks' entity is detected, update the context object
@@ -35,6 +39,11 @@ export default function discourseHandler(r) {
   //
   // TO TEST YOUR WORK 
   // Use e.g. Chrome Dev Tools to inspect the response payload
+
+  const parkEntity = r.entities.find(e => e.entity === 'NationalParks');
+  if (parkEntity) {
+    r.context.park = parkEntity.value;
+  }
 
   // 3. RETURN THE PARK OBJECT WITH THE RESPONSE PAYLOAD
   //    Examine the intents object in the response, r
@@ -50,5 +59,18 @@ export default function discourseHandler(r) {
   // OR
   // Use e.g. Chrome Dev Tools to inspect the response payload 
 
-  return r;
+  if (r.intents.length === 0) {
+    return r;
+  }
+
+  switch (r.intents[0].intent) {
+    case 'tellmeabout':
+      const park = r.context.park;
+      if (park) {
+        r.output.park = ParksDatabase.byName(park);
+      }
+      return r;
+    default:
+      return r;
+  }
 }
